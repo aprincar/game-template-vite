@@ -2,9 +2,15 @@ name: Template CI
 on: [push, pull_request]
 jobs:
   build:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-      - run: npm install
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
       - run: npm run check
