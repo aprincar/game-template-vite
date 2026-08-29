@@ -7,3 +7,5 @@ npm run dev
 npm run build
 ```
 The output under `package/` is the reviewable Aprincar V1 extension artifact (`manifest.json`, `game.html`, `integrity.json`).
+
+See `docs/README.md` for the authoring lifecycle and submission contract.
