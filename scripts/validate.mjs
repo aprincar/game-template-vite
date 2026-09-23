@@ -34,6 +34,7 @@ const allowedPermissions = new Set([
   'network',
   'geolocation',
 ]);
+const sensitivePermissions = new Set(['camera', 'microphone', 'network', 'geolocation']);
 
 if (manifest.manifestVersion !== 1) errors.push('manifestVersion must be 1');
 if (manifest.kind !== 'game') errors.push('kind must be game');
@@ -48,11 +49,13 @@ if (!Array.isArray(manifest.permissions) || !manifest.permissions.every((permiss
   errors.push('unsupported permission');
 if (!Array.isArray(manifest.optionalPermissions) || !manifest.optionalPermissions.every((permission) => allowedPermissions.has(permission)))
   errors.push('unsupported optional permission');
+if (Array.isArray(manifest.permissions) && manifest.permissions.some((permission) => sensitivePermissions.has(permission)))
+  errors.push('sensitive permissions must be declared only in optionalPermissions');
 const skills = [...(manifest.contributes?.skills ?? []), ...(manifest.contributes?.secondarySkills ?? [])];
 if (skills.length === 0) errors.push('at least one Aprincar Skill ID is required');
 for (const skill of skills) if (!skillIds.has(skill)) errors.push(`unknown skill: ${skill}`);
-if (manifest.offline !== true && !manifest.permissions?.includes('network'))
-  errors.push('non-offline games must request network permission');
+if (manifest.offline !== true && !manifest.optionalPermissions?.includes('network'))
+  errors.push('non-offline games must declare network in optionalPermissions');
 if (/<script[^>]+src=["']https?:\/\//i.test(html) || /import\s*\([^)]*https?:\/\//i.test(html) || /eval\s*\(/.test(html))
   errors.push('remote or dynamic executable code is forbidden');
 if (manifest.offline === true && /<(?:img|audio|video|source|link)\b[^>]*(?:src|href)=["']https?:\/\//i.test(html))

@@ -8,10 +8,11 @@
     "prepare": "node scripts/install-hooks.mjs",
     "dev": "vite",
     "build": "vite build",
-    "check": "npm run test && npm run build && npm run package && npm run validate",
+    "check": "npm run test && npm run typecheck && npm run build && npm run package && npm run validate",
     "test": "node --test tests/*.test.mjs",
     "package": "node scripts/package.mjs",
-    "validate": "node scripts/validate.mjs"
+    "validate": "node scripts/validate.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {},
   "devDependencies": {
